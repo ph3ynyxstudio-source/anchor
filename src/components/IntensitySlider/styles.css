@@ -1,0 +1,51 @@
+.intensity-slider {
+  display: flex;
+  align-items: center;
+  outline: none;
+  width: 100%;
+}
+
+.intensity-slider:focus-visible .intensity-buttons {
+  border-color: var(--accent-anchor);
+}
+
+.intensity-buttons {
+  display: flex;
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-line);
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 1px;
+}
+
+.intensity-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 0;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-align: center;
+}
+
+.intensity-btn:hover:not(:disabled) {
+  background-color: rgba(139, 94, 60, 0.12);
+  color: var(--text-main);
+}
+
+.intensity-btn.active {
+  background-color: var(--accent-anchor);
+  color: #f7f3e9;
+  font-weight: 600;
+}
+
+.intensity-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

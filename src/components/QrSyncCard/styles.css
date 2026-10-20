@@ -1,0 +1,124 @@
+.qr-sync-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-line);
+  border-radius: 6px;
+  padding: 14px;
+  text-align: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.qr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.qr-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.qr-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.qr-close-btn:hover {
+  color: var(--text-main);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.qr-instruction {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 320px;
+}
+
+.qr-box {
+  background-color: var(--bg-paper);
+  border: 1px solid var(--border-line);
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.qr-image svg {
+  display: block;
+}
+
+.qr-placeholder {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--text-muted);
+}
+
+.qr-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
+
+.qr-detail-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  align-items: center;
+}
+
+.qr-detail-label {
+  color: var(--text-muted);
+}
+
+.qr-detail-value {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--text-main);
+  background-color: #fffefb;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-line);
+}
+
+.qr-detail-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--accent-active);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent-active);
+  display: inline-block;
+}

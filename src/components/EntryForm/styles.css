@@ -1,0 +1,132 @@
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group.grow {
+  flex: 1;
+}
+
+.form-label {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: 0.2px;
+}
+
+.form-label.secondary {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.input-row {
+  display: flex;
+  width: 100%;
+}
+
+.text-input {
+  width: 100%;
+  padding: 6px 10px;
+  background-color: #fffefb;
+  border: 1px solid var(--border-line);
+  border-radius: 4px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.text-input:focus {
+  border-color: var(--accent-anchor);
+  box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.15);
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.textarea-input {
+  width: 100%;
+  padding: 8px 10px;
+  background-color: #fffefb;
+  border: 1px solid var(--border-line);
+  border-radius: 4px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.4;
+  outline: none;
+  resize: none;
+  flex: 1;
+  min-height: 56px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea-input:focus {
+  border-color: var(--accent-anchor);
+  box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.15);
+}
+
+.textarea-input::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.submit-button {
+  flex: 1;
+  background-color: var(--accent-anchor);
+  color: #f7f3e9;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 9px 16px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px rgba(44, 42, 41, 0.1);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #784f32;
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feedback-hint {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--accent-active);
+  font-weight: 500;
+}
