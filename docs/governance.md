@@ -34,7 +34,7 @@ Règles strictes
 Règle 1 : L'IA ne doit ajouter aucune dépendance NPM ou Cargo non mentionnée dans les spécifications sans validation.
 Règle 2 : Aucune tentative de génération de graphiques (charts) ou d'écrans analytiques ne doit être acceptée.
 Règle 3 : Tout comportement imprévu doit privilégier l'échec explicite local plutôt qu'un contournement par un service distant.
-
+Règle 4 : Après chaque modification du code ou de l'architecture, si un document dans docs/ est impacté, il doit être mis à jour immédiatement pour maintenir la documentation en parfaite synchronisation avec le code.
 
 À éviter
 
