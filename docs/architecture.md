@@ -22,8 +22,9 @@ Il ne décrit PAS l'apparence visuelle, les composants graphiques individuels, n
 - Desktop (Windows / Linux / macOS) :
   - Feature Tauri `tray-icon` activée
   - Module `tray.rs` conditionné sous `#[cfg(desktop)]`
-  - Positionnement de la fenêtre flottante 380x520 et gestion du focus (`WindowEvent::Focused(false)`)
-  - Contrôles de fenêtre (ancrage 📌, détachement en vraie fenêtre standard ⧉)
+  - Fenêtre standard 480x680 avec décorations OS et présence en barre des tâches
+  - Raccourci System Tray : clic gauche pour basculer affichage / masquage
+  - Fermeture interceptée via `WindowEvent::CloseRequested` pour masquer vers le Tray (maintien du serveur P2P)
 
 - Mobile (Android `aarch64-linux-android`) :
   - Compilation sans module tray (`#[cfg(desktop)]` ignoré)
@@ -35,11 +36,9 @@ Il ne décrit PAS l'apparence visuelle, les composants graphiques individuels, n
 
 ```txt
 Action utilisateur (Desktop) :
-Clic Tray → Event Tauri → Affichage instantané fenêtre flottante (380x520)
-Saisie entrée → Commande IPC Rust (`save_entry`) → Insertion transactionnelle SQLite → Fermeture du volet (si non épinglé)
-Perte de focus (WindowEvent::Focused(false)) → Fermeture automatique de la fenêtre (sauf si épinglé ou détaché)
-Bouton 📌 → Commande IPC Rust (`toggle_pin`) → Active/désactive l'inhibition de l'auto-masquage
-Bouton ⧉ → Commande IPC Rust (`toggle_detach`) → Bascule entre widget et vraie fenêtre Windows redimensionnable
+Clic Tray → Event Tauri → Bascule visibilité / restauration de la fenêtre (480x680)
+Saisie entrée → Commande IPC Rust (`save_entry`) → Insertion transactionnelle SQLite → Confirmation visuelle
+Clic Fermeture '✕' → Interception CloseRequested → Masquage dans le System Tray (serveur Axum maintenu actif)
 
 Action synchronisation (Wi-Fi) :
 PC démarre → Axum écoute sur 0.0.0.0:45455 → Affichage QR Code local (`/api/info`)
@@ -58,16 +57,16 @@ Mobile scanne QR Code → Requête HTTP POST /api/sync → Réconciliation Last-
 ## Commandes IPC Tauri
 
 ```txt
-- save_entry(input)        : Valide, génère UUIDv4/horodatage ISO 8601 UTC, insère dans SQLite et masque le volet si non ancré
+- save_entry(input)        : Valide, génère UUIDv4/horodatage ISO 8601 UTC, insère dans SQLite
 - get_entries()            : Récupère les entrées actives (non supprimées)
 - delete_entry(id)         : Marquage logique `is_deleted = 1` avec mise à jour du `updated_at`
 - export_markdown()        : Génère le journal au format texte brut / Markdown
 - get_sync_info()          : Fournit l'IP locale, le port 45455 et l'URL pour le QR Code
-- hide_window()            : Masquage explicite de la fenêtre flottante (desktop uniquement)
-- toggle_pin()             : Active ou désactive le maintien du panneau ouvert (inhibition de l'auto-masquage sur blur)
-- get_pin_state()          : Retourne l'état d'ancrage / épingle du panneau
-- toggle_detach()          : Bascule entre mode widget System Tray et mode vraie fenêtre Windows avec bordures
-- get_detach_state()       : Retourne l'état de détachement de la fenêtre
+- hide_window()            : Masquage explicite de la fenêtre vers le System Tray
+- toggle_pin()             : Maintien de compatibilité (no-op desktop/mobile)
+- get_pin_state()          : Maintien de compatibilité
+- toggle_detach()          : Maintien de compatibilité
+- get_detach_state()       : Maintien de compatibilité
 - set_pin(pin)             : Enregistrement sécurisé du code PIN
 - verify_pin(pin)          : Vérification du code PIN saisi
 - is_pin_configured()      : Statut de configuration du code PIN

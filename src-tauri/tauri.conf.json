@@ -1,6 +1,5 @@
 {
-  "$schema": "https://schema.tauri.app/config/2",
-  "productName": "anchor",
+  "productName": "Anchor",
   "version": "0.1.0",
   "identifier": "com.ph3ynyx.anchor",
   "build": {
@@ -14,14 +13,17 @@
       {
         "label": "main",
         "title": "Anchor",
-        "width": 380,
-        "height": 520,
-        "resizable": false,
-        "decorations": false,
-        "alwaysOnTop": true,
-        "skipTaskbar": true,
-        "visible": false,
-        "shadow": true
+        "width": 480,
+        "height": 680,
+        "minWidth": 380,
+        "minHeight": 520,
+        "resizable": true,
+        "decorations": true,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "visible": true,
+        "shadow": true,
+        "center": true
       }
     ],
     "security": {

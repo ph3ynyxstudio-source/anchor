@@ -8,8 +8,6 @@ mod tray;
 use db::get_migrations;
 use server::AppState;
 use std::sync::atomic::AtomicBool;
-#[cfg(desktop)]
-use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use tauri::Manager;
 #[cfg(desktop)]
@@ -64,14 +62,6 @@ pub fn run() {
                 let app_handle = app.handle().clone();
                 // Setup system tray
                 tray::setup_tray(&app_handle).expect("Failed to setup system tray");
-
-                // Configure main window (dimensions 380x520, borderless, always on top, skip taskbar)
-                if let Some(window) = app.get_webview_window("main") {
-                    let _ = window.set_decorations(false);
-                    let _ = window.set_always_on_top(true);
-                    let _ = window.set_skip_taskbar(true);
-                    let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
-                }
             }
 
             Ok(())
@@ -79,16 +69,10 @@ pub fn run() {
         .on_window_event(|window, event| {
             #[cfg(desktop)]
             {
-                // Auto-hide when focus is lost (WindowEvent::Focused(false)) unless pinned or detached
-                if let WindowEvent::Focused(false) = event {
-                    let app = window.app_handle();
-                    if let Some(state) = app.try_state::<AppState>() {
-                        let pinned = state.is_pinned.load(Ordering::Relaxed);
-                        let detached = state.is_detached.load(Ordering::Relaxed);
-                        if !pinned && !detached {
-                            let _ = window.hide();
-                        }
-                    }
+                // When close button 'X' is clicked, hide window to tray instead of terminating
+                if let WindowEvent::CloseRequested { api, .. } = event {
+                    let _ = window.hide();
+                    api.prevent_close();
                 }
             }
             #[cfg(not(desktop))]

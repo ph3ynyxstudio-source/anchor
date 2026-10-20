@@ -7,21 +7,9 @@ use tauri::{State, WebviewWindow, Window};
 pub async fn save_entry(
     input: MoodEntryInput,
     state: State<'_, AppState>,
-    window: Window,
+    _window: Window,
 ) -> Result<MoodEntry, String> {
     let entry = db::save_new_entry(&state.pool, input).await?;
-    #[cfg(desktop)]
-    {
-        let pinned = state.is_pinned.load(Ordering::Relaxed);
-        let detached = state.is_detached.load(Ordering::Relaxed);
-        if !pinned && !detached {
-            let _ = window.hide();
-        }
-    }
-    #[cfg(not(desktop))]
-    {
-        let _ = window;
-    }
     Ok(entry)
 }
 
@@ -90,23 +78,9 @@ pub fn toggle_detach(
     #[cfg(desktop)]
     {
         if new_val {
-            // Detached mode: Standard Windows window
-            let _ = window.set_decorations(true);
-            let _ = window.set_resizable(true);
-            let _ = window.set_skip_taskbar(false);
-            let _ = window.set_always_on_top(false);
-            let _ = window.set_size(tauri::LogicalSize::new(540.0, 680.0));
-            let _ = window.center();
-            let _ = window.set_focus();
-        } else {
-            // Docked mode: Floating tray widget
-            let _ = window.set_decorations(false);
-            let _ = window.set_resizable(false);
-            let _ = window.set_skip_taskbar(true);
             let _ = window.set_always_on_top(true);
-            let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
-            crate::tray::position_window(&window, tauri::Rect::default());
-            let _ = window.set_focus();
+        } else {
+            let _ = window.set_always_on_top(false);
         }
     }
 

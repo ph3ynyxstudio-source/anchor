@@ -18,8 +18,6 @@ export function App() {
   const [isLocked, setIsLocked] = useState<boolean>(false);
   const [isConfiguringPin, setIsConfiguringPin] = useState<boolean>(false);
   const [hasPinConfigured, setHasPinConfigured] = useState<boolean>(false);
-  const [isPinned, setIsPinned] = useState<boolean>(false);
-  const [isDetached, setIsDetached] = useState<boolean>(false);
 
   const t = translations[lang];
 
@@ -44,20 +42,8 @@ export function App() {
     }
   };
 
-  const checkWindowModes = async () => {
-    try {
-      const pinned = await invoke<boolean>("get_pin_state");
-      const detached = await invoke<boolean>("get_detach_state");
-      setIsPinned(pinned);
-      setIsDetached(detached);
-    } catch (err) {
-      console.error("Failed to check window modes:", err);
-    }
-  };
-
   useEffect(() => {
     checkPinStatus();
-    checkWindowModes();
     loadEntries();
   }, []);
 
@@ -65,92 +51,44 @@ export function App() {
     setLang((prev) => (prev === "fr" ? "en" : "fr"));
   };
 
-  const handleTogglePin = async () => {
-    try {
-      const newPinned = await invoke<boolean>("toggle_pin");
-      setIsPinned(newPinned);
-    } catch (err) {
-      console.error("Failed to toggle pin state:", err);
-    }
-  };
-
-  const handleToggleDetach = async () => {
-    try {
-      const newDetached = await invoke<boolean>("toggle_detach");
-      setIsDetached(newDetached);
-    } catch (err) {
-      console.error("Failed to toggle detach state:", err);
-    }
-  };
-
-  const handleCloseWindow = async () => {
-    try {
-      await invoke("hide_window");
-    } catch (err) {
-      console.error("Failed to hide window:", err);
+  const handlePinAction = () => {
+    if (hasPinConfigured) {
+      setIsLocked(true);
+    } else {
+      setIsConfiguringPin(true);
     }
   };
 
   return (
-    <div className={`anchor-app ${isDetached ? "detached" : ""}`}>
+    <div className="anchor-app">
       {/* Header */}
       <header className="app-header">
-        <div className="header-brand" onClick={() => setActiveTab("entry")}>
-          <span className="brand-icon">⚓</span>
-          <h1 className="brand-title">{t.app_title}</h1>
-        </div>
+        <div className="header-content">
+          <div className="header-brand" onClick={() => setActiveTab("entry")}>
+            <span className="brand-icon">⚓</span>
+            <h1 className="brand-title">{t.app_title}</h1>
+          </div>
 
-        <div className="header-actions">
-          {/* Ancrer le panneau (Desktop only) */}
-          <button
-            className={`header-btn desktop-only ${isPinned ? "pinned" : ""}`}
-            onClick={handleTogglePin}
-            title={isPinned ? t.action_unpin : t.action_pin}
-          >
-            📌
-          </button>
+          <div className="header-actions">
+            {/* Langue (FR / EN) */}
+            <button
+              className="header-btn"
+              onClick={handleToggleLang}
+              title={t.language_toggle}
+            >
+              {lang === "fr" ? "EN" : "FR"}
+            </button>
 
-          {/* Ouvrir une vraie fenêtre (Desktop only) */}
-          <button
-            className={`header-btn desktop-only ${isDetached ? "active" : ""}`}
-            onClick={handleToggleDetach}
-            title={isDetached ? t.action_dock : t.action_detach}
-          >
-            {isDetached ? "🗗" : "⧉"}
-          </button>
-
-          {/* Langue (Mobile & Desktop) */}
-          <button
-            className="header-btn"
-            onClick={handleToggleLang}
-            title={t.language_toggle}
-          >
-            {lang === "fr" ? "EN" : "FR"}
-          </button>
-
-          {/* Verrou PIN (Mobile & Desktop) */}
-          <button
-            className={`header-btn ${isLocked ? "active" : ""}`}
-            onClick={() => {
-              if (hasPinConfigured) {
-                setIsLocked(true);
-              } else {
-                setIsConfiguringPin(true);
-              }
-            }}
-            title={hasPinConfigured ? t.pin_prompt : t.pin_set}
-          >
-            🔒
-          </button>
-
-          {/* Fermer (Desktop only) */}
-          <button
-            className="header-btn desktop-only"
-            onClick={handleCloseWindow}
-            title={t.close}
-          >
-            ✕
-          </button>
+            {/* Verrou / Configuration PIN (PC & Mobile) */}
+            <button
+              className={`header-btn pin-btn ${isLocked ? "active" : ""}`}
+              onClick={handlePinAction}
+              title={hasPinConfigured ? t.pin_prompt : t.pin_set}
+              aria-label={hasPinConfigured ? t.pin_prompt : t.pin_set}
+            >
+              🔒
+            </button>
+          </div>
         </div>
       </header>
 
@@ -195,46 +133,48 @@ export function App() {
       {/* Footer Navigation */}
       {!isLocked && !isConfiguringPin && (
         <footer className="app-footer">
-          <button
-            type="button"
-            className={`footer-tab-btn ${activeTab === "entry" ? "active" : ""}`}
-            onClick={() => setActiveTab("entry")}
-          >
-            <span className="footer-icon">✍️</span>
-            <span>{t.tab_entry}</span>
-          </button>
+          <div className="footer-tabs-container">
+            <button
+              type="button"
+              className={`footer-tab-btn ${activeTab === "entry" ? "active" : ""}`}
+              onClick={() => setActiveTab("entry")}
+            >
+              <span className="footer-icon">✍️</span>
+              <span>{t.tab_entry}</span>
+            </button>
 
-          <button
-            type="button"
-            className={`footer-tab-btn ${activeTab === "sync" ? "active" : ""}`}
-            onClick={() => setActiveTab(activeTab === "sync" ? "entry" : "sync")}
-          >
-            <span className="footer-icon">📲</span>
-            <span>{t.tab_sync}</span>
-          </button>
+            <button
+              type="button"
+              className={`footer-tab-btn ${activeTab === "sync" ? "active" : ""}`}
+              onClick={() => setActiveTab(activeTab === "sync" ? "entry" : "sync")}
+            >
+              <span className="footer-icon">📲</span>
+              <span>{t.tab_sync}</span>
+            </button>
 
-          <button
-            type="button"
-            className={`footer-tab-btn ${
-              activeTab === "history" || activeTab === "export" ? "active" : ""
-            }`}
-            onClick={() => {
-              if (activeTab === "history") {
-                setActiveTab("export");
-              } else if (activeTab === "export") {
-                setActiveTab("entry");
-              } else {
-                setActiveTab("history");
-              }
-            }}
-          >
-            <span className="footer-icon">📋</span>
-            <span>
-              {activeTab === "history"
-                ? t.action_export
-                : t.tab_history}
-            </span>
-          </button>
+            <button
+              type="button"
+              className={`footer-tab-btn ${
+                activeTab === "history" || activeTab === "export" ? "active" : ""
+              }`}
+              onClick={() => {
+                if (activeTab === "history") {
+                  setActiveTab("export");
+                } else if (activeTab === "export") {
+                  setActiveTab("entry");
+                } else {
+                  setActiveTab("history");
+                }
+              }}
+            >
+              <span className="footer-icon">📋</span>
+              <span>
+                {activeTab === "history"
+                  ? t.action_export
+                  : t.tab_history}
+              </span>
+            </button>
+          </div>
         </footer>
       )}
     </div>

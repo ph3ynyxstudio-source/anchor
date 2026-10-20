@@ -2,14 +2,18 @@ LAYOUT — Anchor
 
 Objectif
 
-Ce document spécifie le découpage de l'espace écran pour la vue bureau (widget / fenêtre détachée) et la vue mobile (Android).
+Ce document spécifie le découpage de l'espace écran pour la vue bureau (fenêtre standard Windows avec raccourci System Tray) et la vue mobile (Android).
 Il ne décrit PAS les couleurs de thème ni le schéma relationnel.
 
-Organisation spatiale Desktop (Fenêtre Tray Flottante : 380px × 520px)
+Organisation spatiale Desktop (Fenêtre Principale Standard : 480px × 680px)
 
 ┌──────────────────────────────────────────────┐
-│ [⚓ Anchor]           [📌 Ancrer] [⧉ Fenêtre] [FR/EN] [🔒] [✕]│ → Barre d'en-tête
+│ Anchor                              —  □  ✕  │ → Barre de titre standard OS (décorations)
 ├──────────────────────────────────────────────┤
+│ [⚓ Anchor]                  [FR/EN]   [🔒]   │ → Barre d'en-tête applicative
+├──────────────────────────────────────────────┤
+│ Feuille de carnet centrée (max-width: 560px) │
+│                                              │
 │ Émotion 1 * : [                    ] [1..10] │
 │ Émotion 2   : [                    ] [1..10] │ → Zone de saisie active
 │ Émotion 3   : [                    ] [1..10] │
@@ -19,25 +23,24 @@ Organisation spatiale Desktop (Fenêtre Tray Flottante : 380px × 520px)
 │ └──────────────────────────────────────────┘ │
 │ [   Enregistrer / Anchor Point   ]           │
 ├──────────────────────────────────────────────┤
-│ [ Saisie ]    [ Wi-Fi Sync (QR) ]   [ Export]│ → Pied de widget utilitaire
+│ [ Saisie ]    [ Wi-Fi Sync (QR) ]   [ Export]│ → Barre d'onglets utilitaire
 └──────────────────────────────────────────────┘
 
 
-Modes d'affichage Desktop
+Comportement de la fenêtre Desktop
 
-1. Mode Widget Tray (Défaut) :
-   - Fenêtre volante 380px × 520px, sans bordure (`decorations: false`), `always_on_top: true`, `skip_taskbar: true`.
-   - Perte de focus (`WindowEvent::Focused(false)`) : masque automatiquement la fenêtre (sauf si épinglée).
+1. Fenêtre Standard Décorée :
+   - Dimensions initiales : 480px × 680px (min 380px × 520px).
+   - Bordures et barre de titre système (`decorations: true`, boutons natifs réduire, agrandir, fermer).
+   - Redimensionnable (`resizable: true`), centrée au premier affichage (`center: true`).
+   - Présente dans la barre des tâches Windows (`skipTaskbar: false`).
+   - `alwaysOnTop: false` par défaut pour une intégration naturelle dans l'environnement de travail.
+   - Ne se masque pas lors de la perte de focus (l'utilisateur peut cliquer sur d'autres fenêtres sans fermer Anchor).
 
-2. Mode Épinglé / Ancré (Bouton 📌) :
-   - Maintient le format widget flottant tout en inhibant la fermeture automatique lors de la perte de focus.
-   - Permet de garder le panneau visible tout en consultant ou manipulant d'autres fenêtres.
-
-3. Mode Vraie Fenêtre Détachée (Bouton ⧉) :
-   - Active les bordures et la barre de titre standard du système d'exploitation (`decorations: true`).
-   - Fenêtre redimensionnable (`resizable: true`), centrée sur l'écran, présente dans la barre des tâches (`skip_taskbar: false`).
-   - Permet une consultation élargie et confortable de l'historique et des exports.
-   - Un clic sur l'icône 🗗 permet de re-docker instantanément l'application en widget System Tray.
+2. Raccourci System Tray (Plateau Système) :
+   - Icône ⚓ dans le System Tray.
+   - Clic gauche : si la fenêtre est visible et active, elle est masquée (`window.hide()`) ; si elle est masquée ou réduite, elle est restaurée, affichée et mise au premier plan (`window.unminimize()`, `window.show()`, `window.set_focus()`).
+   - Fermeture via le bouton standard '✕' de la barre de titre : intercepte `CloseRequested` pour masquer dans le System Tray (`window.hide()`, `api.prevent_close()`), garantissant la disponibilité continue du serveur Axum de synchronisation Wi-Fi P2P.
 
 
 Organisation spatiale Mobile (Android)
@@ -66,27 +69,27 @@ Organisation spatiale Mobile (Android)
 
 Spécifications ergonomiques Mobile :
 - Respect impératif des Safe Area Insets (barre d'état Android et barre de navigation par gestes) : `viewport-fit=cover`, `env(safe-area-inset-top)` et `env(safe-area-inset-bottom)`.
-- Épuration de l'en-tête : masquage des contrôles spécifiques au bureau (épingle 📌, détachement ⧉, fermeture ✕).
+- En-tête épuré et identique : logo `⚓ Anchor`, sélecteur bilingue `[FR/EN]`, cadenas de verrouillage `[🔒 PIN]`.
 - Cibles tactiles conformes aux standards ergonomiques : boutons et champs de saisie à hauteur minimale de 44px à 48px.
 - Largeur fluide 100% sans bordures de widget artificielles, défilement vertical tactile fluide.
 
 
 Règles strictes
 
-Règle 1 : La fenêtre desktop démarre obligatoirement en mode widget avec decorations: false, always_on_top: true et skip_taskbar: true.
-Règle 2 : En mode widget desktop non-épinglé, perdre le focus (blur) masque immédiatement la fenêtre.
-Règle 3 : Sur mobile, l'interface doit s'adapter en plein écran naturel avec prise en compte des safe area insets et cibles tactiles ≥ 44px.
+Règle 1 : La fenêtre desktop démarre en fenêtre standard décorée avec `decorations: true`, `resizable: true`, `skipTaskbar: false` et `alwaysOnTop: false`.
+Règle 2 : Le clic sur le System Tray bascule visibilité/masquage ; la fermeture '✕' masque vers le System Tray pour préserver le serveur de sync Wi-Fi.
+Règle 3 : Sur mobile, l'interface s'adapte en plein écran naturel avec prise en compte des safe area insets et cibles tactiles ≥ 44px.
 
 
 À éviter
 
-- Ne pas afficher de barre de titre ou de contrôles fenêtrés bureau sur mobile.
-- Ne pas contraindre la vue mobile à un format fixe 380px de widget bureau.
+- Ne pas forcer la fermeture brutale du processus lors du clic '✕' bureau sans passer par le tray (ce qui couperait les synchronisations Wi-Fi en cours).
+- Ne pas contraindre la vue mobile à un format fixe de widget bureau.
 - Ne pas placer d'éléments cliquables sous la barre de navigation ou d'état système Android.
 
 
 Phrase simple
 
-Un widget ancré en bas à droite sur PC.
+Une fenêtre standard redimensionnable avec accès rapide System Tray sur PC.
 Une application plein écran ergonomique et tactile sur Android.
 L'affichage s'adapte sans compromis à chaque plateforme.
