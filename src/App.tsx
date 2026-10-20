@@ -101,25 +101,25 @@ export function App() {
         </div>
 
         <div className="header-actions">
-          {/* Ancrer le panneau / Pin Panel (keep open on blur) */}
+          {/* Ancrer le panneau (Desktop only) */}
           <button
-            className={`header-btn ${isPinned ? "pinned" : ""}`}
+            className={`header-btn desktop-only ${isPinned ? "pinned" : ""}`}
             onClick={handleTogglePin}
             title={isPinned ? t.action_unpin : t.action_pin}
           >
             📌
           </button>
 
-          {/* Ouvrir une vraie fenêtre / Vraie fenêtre détachée */}
+          {/* Ouvrir une vraie fenêtre (Desktop only) */}
           <button
-            className={`header-btn ${isDetached ? "active" : ""}`}
+            className={`header-btn desktop-only ${isDetached ? "active" : ""}`}
             onClick={handleToggleDetach}
             title={isDetached ? t.action_dock : t.action_detach}
           >
             {isDetached ? "🗗" : "⧉"}
           </button>
 
-          {/* Langue */}
+          {/* Langue (Mobile & Desktop) */}
           <button
             className="header-btn"
             onClick={handleToggleLang}
@@ -128,7 +128,7 @@ export function App() {
             {lang === "fr" ? "EN" : "FR"}
           </button>
 
-          {/* Verrou PIN */}
+          {/* Verrou PIN (Mobile & Desktop) */}
           <button
             className={`header-btn ${isLocked ? "active" : ""}`}
             onClick={() => {
@@ -143,9 +143,9 @@ export function App() {
             🔒
           </button>
 
-          {/* Fermer */}
+          {/* Fermer (Desktop only) */}
           <button
-            className="header-btn"
+            className="header-btn desktop-only"
             onClick={handleCloseWindow}
             title={t.close}
           >

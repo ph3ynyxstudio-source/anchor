@@ -1,13 +1,19 @@
 mod commands;
 mod db;
 mod server;
+
+#[cfg(desktop)]
 mod tray;
 
 use db::get_migrations;
 use server::AppState;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::AtomicBool;
+#[cfg(desktop)]
+use std::sync::atomic::Ordering;
 use std::sync::Arc;
-use tauri::{Manager, WindowEvent};
+use tauri::Manager;
+#[cfg(desktop)]
+use tauri::WindowEvent;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -19,8 +25,6 @@ pub fn run() {
                 .build(),
         )
         .setup(|app| {
-            let app_handle = app.handle().clone();
-
             // Resolve app data directory for anchor.db
             let app_data = app
                 .path()
@@ -55,30 +59,41 @@ pub fn run() {
                 }
             });
 
-            // Setup system tray
-            tray::setup_tray(&app_handle).expect("Failed to setup system tray");
+            #[cfg(desktop)]
+            {
+                let app_handle = app.handle().clone();
+                // Setup system tray
+                tray::setup_tray(&app_handle).expect("Failed to setup system tray");
 
-            // Configure main window (dimensions 380x520, borderless, always on top, skip taskbar)
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.set_decorations(false);
-                let _ = window.set_always_on_top(true);
-                let _ = window.set_skip_taskbar(true);
-                let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
+                // Configure main window (dimensions 380x520, borderless, always on top, skip taskbar)
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.set_decorations(false);
+                    let _ = window.set_always_on_top(true);
+                    let _ = window.set_skip_taskbar(true);
+                    let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
+                }
             }
 
             Ok(())
         })
         .on_window_event(|window, event| {
-            // Auto-hide when focus is lost (WindowEvent::Focused(false)) unless pinned or detached
-            if let WindowEvent::Focused(false) = event {
-                let app = window.app_handle();
-                if let Some(state) = app.try_state::<AppState>() {
-                    let pinned = state.is_pinned.load(Ordering::Relaxed);
-                    let detached = state.is_detached.load(Ordering::Relaxed);
-                    if !pinned && !detached {
-                        let _ = window.hide();
+            #[cfg(desktop)]
+            {
+                // Auto-hide when focus is lost (WindowEvent::Focused(false)) unless pinned or detached
+                if let WindowEvent::Focused(false) = event {
+                    let app = window.app_handle();
+                    if let Some(state) = app.try_state::<AppState>() {
+                        let pinned = state.is_pinned.load(Ordering::Relaxed);
+                        let detached = state.is_detached.load(Ordering::Relaxed);
+                        if !pinned && !detached {
+                            let _ = window.hide();
+                        }
                     }
                 }
+            }
+            #[cfg(not(desktop))]
+            {
+                let _ = (window, event);
             }
         })
         .invoke_handler(tauri::generate_handler![

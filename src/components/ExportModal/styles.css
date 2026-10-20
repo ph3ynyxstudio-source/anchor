@@ -98,3 +98,37 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Mobile Touch Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+  .export-modal {
+    padding: 16px;
+    border-radius: 8px;
+    gap: 14px;
+  }
+
+  .export-title {
+    font-size: 17px;
+  }
+
+  .export-close-btn {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .export-preview {
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .export-copy-btn {
+    min-height: 48px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+}

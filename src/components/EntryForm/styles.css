@@ -130,3 +130,48 @@
   color: var(--accent-active);
   font-weight: 500;
 }
+
+/* Mobile Touch Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+  .entry-form {
+    gap: 14px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+
+  .form-label {
+    font-size: 14px;
+  }
+
+  .form-label.secondary {
+    font-size: 13px;
+  }
+
+  .text-input {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+
+  .textarea-input {
+    min-height: 84px;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+
+  .submit-button {
+    min-height: 48px;
+    font-size: 16px;
+    border-radius: 6px;
+    padding: 12px 20px;
+    margin-top: 4px;
+  }
+
+  .feedback-hint {
+    font-size: 13px;
+  }
+}

@@ -112,3 +112,44 @@
 .event-quote {
   color: var(--text-main);
 }
+
+/* Mobile Touch Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+  .history-list {
+    gap: 12px;
+  }
+
+  .history-item {
+    padding: 12px 14px;
+    border-radius: 8px;
+    gap: 8px;
+  }
+
+  .history-date {
+    font-size: 14px;
+  }
+
+  .history-delete-btn {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .history-emotion {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .emotion-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .history-event {
+    font-size: 13px;
+  }
+}

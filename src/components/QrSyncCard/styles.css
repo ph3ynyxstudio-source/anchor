@@ -122,3 +122,40 @@
   background-color: var(--accent-active);
   display: inline-block;
 }
+
+/* Mobile Touch Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+  .qr-sync-card {
+    padding: 18px 16px;
+    border-radius: 8px;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .qr-title {
+    font-size: 17px;
+  }
+
+  .qr-instruction {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .qr-close-btn {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-details {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .qr-detail-badge {
+    font-size: 13px;
+  }
+}

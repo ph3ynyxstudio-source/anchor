@@ -16,6 +16,21 @@ Il ne décrit PAS l'apparence visuelle, les composants graphiques individuels, n
                        [ Client Mobile Android ]
 ```
 
+## Isolation multiplateforme (Desktop vs Mobile)
+
+```txt
+- Desktop (Windows / Linux / macOS) :
+  - Feature Tauri `tray-icon` activée
+  - Module `tray.rs` conditionné sous `#[cfg(desktop)]`
+  - Positionnement de la fenêtre flottante 380x520 et gestion du focus (`WindowEvent::Focused(false)`)
+  - Contrôles de fenêtre (ancrage 📌, détachement en vraie fenêtre standard ⧉)
+
+- Mobile (Android `aarch64-linux-android`) :
+  - Compilation sans module tray (`#[cfg(desktop)]` ignoré)
+  - Commandes IPC de fenêtrage traitées en no-op sécurisé
+  - Moteur SQLite (`sqlx` / `tauri-plugin-sql`) et serveur P2P Axum partagés à l'identique
+```
+
 ## Flux de communication
 
 ```txt
@@ -48,7 +63,7 @@ Mobile scanne QR Code → Requête HTTP POST /api/sync → Réconciliation Last-
 - delete_entry(id)         : Marquage logique `is_deleted = 1` avec mise à jour du `updated_at`
 - export_markdown()        : Génère le journal au format texte brut / Markdown
 - get_sync_info()          : Fournit l'IP locale, le port 45455 et l'URL pour le QR Code
-- hide_window()            : Masquage explicite de la fenêtre flottante
+- hide_window()            : Masquage explicite de la fenêtre flottante (desktop uniquement)
 - toggle_pin()             : Active ou désactive le maintien du panneau ouvert (inhibition de l'auto-masquage sur blur)
 - get_pin_state()          : Retourne l'état d'ancrage / épingle du panneau
 - toggle_detach()          : Bascule entre mode widget System Tray et mode vraie fenêtre Windows avec bordures

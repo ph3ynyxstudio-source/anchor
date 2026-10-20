@@ -93,3 +93,35 @@
 .pin-dots.shake {
   animation: shake 0.3s ease;
 }
+
+/* Mobile Touch Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+  .pin-title {
+    font-size: 18px;
+  }
+
+  .pin-dots {
+    gap: 16px;
+    margin: 10px 0;
+  }
+
+  .pin-dot {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pin-grid {
+    grid-template-columns: repeat(3, 64px);
+    gap: 14px;
+  }
+
+  .pin-key {
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
+  }
+
+  .pin-key.action {
+    font-size: 16px;
+  }
+}

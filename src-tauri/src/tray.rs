@@ -1,3 +1,5 @@
+#![cfg(desktop)]
+
 use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     AppHandle, Manager, PhysicalPosition, WebviewWindow,

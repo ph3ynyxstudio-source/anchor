@@ -49,3 +49,23 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Mobile Touch Optimization (min 44px tap targets) */
+@media (max-width: 600px) {
+  .intensity-buttons {
+    min-height: 44px;
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .intensity-btn {
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+}

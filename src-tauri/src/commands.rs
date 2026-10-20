@@ -10,10 +10,17 @@ pub async fn save_entry(
     window: Window,
 ) -> Result<MoodEntry, String> {
     let entry = db::save_new_entry(&state.pool, input).await?;
-    let pinned = state.is_pinned.load(Ordering::Relaxed);
-    let detached = state.is_detached.load(Ordering::Relaxed);
-    if !pinned && !detached {
-        let _ = window.hide();
+    #[cfg(desktop)]
+    {
+        let pinned = state.is_pinned.load(Ordering::Relaxed);
+        let detached = state.is_detached.load(Ordering::Relaxed);
+        if !pinned && !detached {
+            let _ = window.hide();
+        }
+    }
+    #[cfg(not(desktop))]
+    {
+        let _ = window;
     }
     Ok(entry)
 }
@@ -47,7 +54,15 @@ pub fn get_sync_info() -> SyncInfoResponse {
 
 #[tauri::command]
 pub fn hide_window(window: Window) -> Result<(), String> {
-    window.hide().map_err(|e| e.to_string())
+    #[cfg(desktop)]
+    {
+        window.hide().map_err(|e| e.to_string())?;
+    }
+    #[cfg(not(desktop))]
+    {
+        let _ = window;
+    }
+    Ok(())
 }
 
 #[tauri::command]
@@ -72,24 +87,32 @@ pub fn toggle_detach(
     let new_val = !current;
     state.is_detached.store(new_val, Ordering::Relaxed);
 
-    if new_val {
-        // Detached mode: Standard Windows window
-        let _ = window.set_decorations(true);
-        let _ = window.set_resizable(true);
-        let _ = window.set_skip_taskbar(false);
-        let _ = window.set_always_on_top(false);
-        let _ = window.set_size(tauri::LogicalSize::new(540.0, 680.0));
-        let _ = window.center();
-        let _ = window.set_focus();
-    } else {
-        // Docked mode: Floating tray widget
-        let _ = window.set_decorations(false);
-        let _ = window.set_resizable(false);
-        let _ = window.set_skip_taskbar(true);
-        let _ = window.set_always_on_top(true);
-        let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
-        crate::tray::position_window(&window, tauri::Rect::default());
-        let _ = window.set_focus();
+    #[cfg(desktop)]
+    {
+        if new_val {
+            // Detached mode: Standard Windows window
+            let _ = window.set_decorations(true);
+            let _ = window.set_resizable(true);
+            let _ = window.set_skip_taskbar(false);
+            let _ = window.set_always_on_top(false);
+            let _ = window.set_size(tauri::LogicalSize::new(540.0, 680.0));
+            let _ = window.center();
+            let _ = window.set_focus();
+        } else {
+            // Docked mode: Floating tray widget
+            let _ = window.set_decorations(false);
+            let _ = window.set_resizable(false);
+            let _ = window.set_skip_taskbar(true);
+            let _ = window.set_always_on_top(true);
+            let _ = window.set_size(tauri::LogicalSize::new(380.0, 520.0));
+            crate::tray::position_window(&window, tauri::Rect::default());
+            let _ = window.set_focus();
+        }
+    }
+
+    #[cfg(not(desktop))]
+    {
+        let _ = window;
     }
 
     Ok(new_val)
