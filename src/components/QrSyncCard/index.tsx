@@ -63,10 +63,11 @@ export const QrSyncCard: FC<QrSyncCardProps> = ({ t, onClose, onSyncCompleted })
         setSyncInfo(info);
         const svg = generateQrSvg(info.sync_url, 140);
         setQrSvg(svg);
-        // Pre-fill target if localStorage is empty and local IP is available
+        // Clean up stored target if it accidentally matches this device's own IP
         setPcAddress((prev) => {
-          if (!prev && info.ip && info.ip !== "127.0.0.1") {
-            return `${info.ip}:${info.port}`;
+          if (info.ip && prev && (prev.startsWith(info.ip) || prev.startsWith("127.0.0.1") || prev.startsWith("localhost"))) {
+            localStorage.removeItem("anchor_sync_target_ip");
+            return "";
           }
           return prev;
         });
@@ -92,6 +93,14 @@ export const QrSyncCard: FC<QrSyncCardProps> = ({ t, onClose, onSyncCompleted })
       setSyncStatus({
         type: "error",
         message: t.sync_error_empty_ip,
+      });
+      return;
+    }
+
+    if (syncInfo?.ip && (trimmed.startsWith(syncInfo.ip) || trimmed.startsWith("127.0.0.1") || trimmed.startsWith("localhost"))) {
+      setSyncStatus({
+        type: "error",
+        message: t.sync_error_self_ip,
       });
       return;
     }

@@ -46,6 +46,7 @@ export interface Translations {
   sync_status_error: string;
   sync_entries_count: string;
   sync_error_empty_ip: string;
+  sync_error_self_ip: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -95,6 +96,7 @@ export const translations: Record<Language, Translations> = {
     sync_status_error: "✗ Échec de synchronisation",
     sync_entries_count: "entrées à jour",
     sync_error_empty_ip: "Veuillez renseigner l'adresse IP du PC.",
+    sync_error_self_ip: "L'adresse saisie est celle de cet appareil. Veuillez entrer l'IP du PC.",
   },
   en: {
     app_title: "Anchor",
@@ -142,5 +144,6 @@ export const translations: Record<Language, Translations> = {
     sync_status_error: "✗ Sync failed",
     sync_entries_count: "entries up-to-date",
     sync_error_empty_ip: "Please enter the PC IP address.",
+    sync_error_self_ip: "The address entered is this device's own IP. Please enter the PC IP.",
   },
 };
