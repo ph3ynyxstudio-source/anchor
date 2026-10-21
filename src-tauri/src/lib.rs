@@ -83,6 +83,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::save_entry,
             commands::get_entries,
+            commands::reconcile_entries,
             commands::delete_entry,
             commands::export_markdown,
             commands::get_sync_info,

@@ -111,7 +111,11 @@ export function App() {
             isSettingPin={true}
           />
         ) : activeTab === "sync" ? (
-          <QrSyncCard t={t} onClose={() => setActiveTab("entry")} />
+          <QrSyncCard
+            t={t}
+            onClose={() => setActiveTab("entry")}
+            onSyncCompleted={loadEntries}
+          />
         ) : activeTab === "export" ? (
           <ExportModal t={t} onClose={() => setActiveTab("history")} />
         ) : activeTab === "history" ? (

@@ -36,6 +36,16 @@ export interface Translations {
   action_unpin: string;
   action_detach: string;
   action_dock: string;
+  sync_client_title: string;
+  sync_ip_label: string;
+  sync_ip_placeholder: string;
+  sync_btn_action: string;
+  sync_btn_syncing: string;
+  sync_status_idle: string;
+  sync_status_success: string;
+  sync_status_error: string;
+  sync_entries_count: string;
+  sync_error_empty_ip: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -75,6 +85,16 @@ export const translations: Record<Language, Translations> = {
     action_unpin: "Désancrer le panneau (auto-masquage au clic externe)",
     action_detach: "Ouvrir dans une vraie fenêtre",
     action_dock: "Réduire en widget flottant",
+    sync_client_title: "Synchronisation avec le PC",
+    sync_ip_label: "Adresse IP du PC :",
+    sync_ip_placeholder: "ex: 192.168.1.50:45455",
+    sync_btn_action: "Synchroniser maintenant",
+    sync_btn_syncing: "Synchronisation en cours...",
+    sync_status_idle: "Prêt pour la synchronisation Wi-Fi locale",
+    sync_status_success: "✓ Synchronisation réussie",
+    sync_status_error: "✗ Échec de synchronisation",
+    sync_entries_count: "entrées à jour",
+    sync_error_empty_ip: "Veuillez renseigner l'adresse IP du PC.",
   },
   en: {
     app_title: "Anchor",
@@ -112,5 +132,15 @@ export const translations: Record<Language, Translations> = {
     action_unpin: "Unpin panel (auto-hide on blur)",
     action_detach: "Open in a real window",
     action_dock: "Dock back to widget",
+    sync_client_title: "Sync with PC",
+    sync_ip_label: "PC IP Address:",
+    sync_ip_placeholder: "e.g. 192.168.1.50:45455",
+    sync_btn_action: "Sync Now",
+    sync_btn_syncing: "Syncing...",
+    sync_status_idle: "Ready for local Wi-Fi sync",
+    sync_status_success: "✓ Sync successful",
+    sync_status_error: "✗ Sync failed",
+    sync_entries_count: "entries up-to-date",
+    sync_error_empty_ip: "Please enter the PC IP address.",
   },
 };

@@ -19,6 +19,14 @@ pub async fn get_entries(state: State<'_, AppState>) -> Result<Vec<MoodEntry>, S
 }
 
 #[tauri::command]
+pub async fn reconcile_entries(
+    entries: Vec<MoodEntry>,
+    state: State<'_, AppState>,
+) -> Result<Vec<MoodEntry>, String> {
+    db::reconcile_sync(&state.pool, entries).await
+}
+
+#[tauri::command]
 pub async fn delete_entry(id: String, state: State<'_, AppState>) -> Result<(), String> {
     db::soft_delete_entry(&state.pool, &id).await
 }

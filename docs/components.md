@@ -10,7 +10,7 @@ Arborescence des composants
 src/components/
   EntryForm/          → Formulaire de saisie des 3 émotions et de l'événement
   IntensitySlider/    → Sélecteur numérique 1 à 10 discret
-  QrSyncCard/         → Affichage du QR code et état de la connexion locale
+  QrSyncCard/         → Affichage du QR code, saisie IP et client de synchronisation P2P
   PinPad/             → Clavier numérique de déverrouillage sécurisé
   ExportModal/        → Sélection de période et génération du document intervenant
   HistoryList/        → Liste chronologique sobre des entrées passées

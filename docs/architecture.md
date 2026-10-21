@@ -42,7 +42,9 @@ Clic Fermeture '✕' → Interception CloseRequested → Masquage dans le System
 
 Action synchronisation (Wi-Fi) :
 PC démarre → Axum écoute sur 0.0.0.0:45455 → Affichage QR Code local (`/api/info`)
-Mobile scanne QR Code → Requête HTTP POST /api/sync → Réconciliation Last-Write-Wins (LWW) → Mise à jour bilatérale SQLite
+Mobile saisit/scanne l'adresse IP du PC → Requête HTTP POST /api/sync avec les entrées locales
+PC réconcilie en base locale SQLite (LWW) et renvoie la collection unifiée
+Mobile fusionne les entrées distantes dans son SQLite local via `reconcile_entries` (LWW)
 ```
 
 ## Points d'accès réseau (Serveur Axum P2P)
@@ -59,6 +61,7 @@ Mobile scanne QR Code → Requête HTTP POST /api/sync → Réconciliation Last-
 ```txt
 - save_entry(input)        : Valide, génère UUIDv4/horodatage ISO 8601 UTC, insère dans SQLite
 - get_entries()            : Récupère les entrées actives (non supprimées)
+- reconcile_entries(entries): Réconcilie et fusionne les entrées distantes dans SQLite local (Last-Write-Wins)
 - delete_entry(id)         : Marquage logique `is_deleted = 1` avec mise à jour du `updated_at`
 - export_markdown()        : Génère le journal au format texte brut / Markdown
 - get_sync_info()          : Fournit l'IP locale, le port 45455 et l'URL pour le QR Code
